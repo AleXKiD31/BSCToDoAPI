@@ -7,6 +7,7 @@ import os
 
 app = FastAPI()
 
+# Routes
 root_template = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'BSCToDoList'))
 root_css = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'BSCToDoList', 'css'))
 root_database = os.path.join(os.path.dirname(__file__), 'database.json')
