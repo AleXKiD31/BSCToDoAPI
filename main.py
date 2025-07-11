@@ -1,14 +1,22 @@
 import json
 from fastapi import FastAPI, Request
 from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import os
 
 app = FastAPI()
 
 root_template = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'BSCToDoList'))
+root_css = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'BSCToDoList', 'css'))
 root_database = os.path.join(os.path.dirname(__file__), 'database.json')
 templates=Jinja2Templates(directory=root_template)
+
+app.mount(
+    "/css",
+    StaticFiles(directory=root_css),
+    name="css",
+)
 
 # Get item from database.json
 # Return the item to todolist.html
