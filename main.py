@@ -21,17 +21,17 @@ async def root(request: Request):
 # Delete item from the list
 @app.get("/delete/{id}")
 async def delete_todo(request:Request,id:str):
-    with open('database.json') as f:
+    with open(root_database) as f:
         data=json.load(f)
     del data[id]
-    with open('database.json','w') as f:
+    with open(root_database,'w') as f:
         json.dump(data,f)
     return RedirectResponse("/",303)
 
 # Add new item to the list
 @app.post("/add")
 async def add_todo(request:Request):
-    with open('database.json') as f:
+    with open(root_database) as f:
         data=json.load(f)
     formdata=await request.form()
     newdata={}
@@ -41,6 +41,6 @@ async def add_todo(request:Request):
         i+=1
     newdata[str(i)]=formdata["newtodo"]
     print(newdata)
-    with open('database.json','w') as f:
+    with open(root_database,'w') as f:
         json.dump(newdata,f)
     return RedirectResponse("/",303)
