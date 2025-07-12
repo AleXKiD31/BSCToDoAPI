@@ -1,8 +1,11 @@
 import json
-from fastapi import FastAPI, Request
+from sqlalchemy.orm import Session
+from fastapi import Depends, FastAPI, Request
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from database import SessionLocal
+from models import ToDoList
 import os
 
 app = FastAPI()
@@ -19,13 +22,21 @@ app.mount(
     name="static",
 )
 
-# Get item from database.json
+# Database
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+# Get item from table todo_list
 # Return the item to todolist.html
 @app.get("/")
-async def root(request: Request):
-    with open(root_database) as f:
-        data = json.load(f)
-    return templates.TemplateResponse('todolist.html',{"request":request,"tododict":data})
+async def root(request: Request, db: Session = Depends(get_db)):
+    items = db.query(ToDoList).all()
+    return templates.TemplateResponse('todolist.html',{"request":request,"tododict":items})
 
 # Delete item from the list
 @app.get("/delete/{id}")
