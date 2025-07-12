@@ -9,14 +9,14 @@ app = FastAPI()
 
 # Routes
 root_template = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'BSCToDoList'))
-root_css = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'BSCToDoList', 'css'))
+root_static = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'BSCToDoList', 'static'))
 root_database = os.path.join(os.path.dirname(__file__), 'database.json')
 templates=Jinja2Templates(directory=root_template)
 
 app.mount(
-    "/css",
-    StaticFiles(directory=root_css),
-    name="css",
+    "/static",
+    StaticFiles(directory=root_static),
+    name="static",
 )
 
 # Get item from database.json
