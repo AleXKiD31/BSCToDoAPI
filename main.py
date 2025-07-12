@@ -1,6 +1,5 @@
-import json
 from sqlalchemy.orm import Session
-from fastapi import Depends, FastAPI, Request
+from fastapi import Depends, FastAPI, Form, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -13,7 +12,6 @@ app = FastAPI()
 # Routes
 root_template = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'BSCToDoList'))
 root_static = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'BSCToDoList', 'static'))
-root_database = os.path.join(os.path.dirname(__file__), 'database.json')
 templates=Jinja2Templates(directory=root_template)
 
 app.mount(
@@ -40,27 +38,23 @@ async def root(request: Request, db: Session = Depends(get_db)):
 
 # Delete item from the list
 @app.get("/delete/{id}")
-async def delete_todo(request:Request,id:str):
-    with open(root_database) as f:
-        data=json.load(f)
-    del data[id]
-    with open(root_database,'w') as f:
-        json.dump(data,f)
-    return RedirectResponse("/",303)
+async def delete_todo(id: int, db: Session = Depends(get_db)):
+    todo_item = db.query(ToDoList).filter(ToDoList.id == id).first()
+
+    # Exception when cant find item
+    if not todo_item:
+        raise HTTPException(status_code=404, detail="Item no encontrado")
+
+    db.delete(todo_item)
+    db.commit()
+
+    return RedirectResponse("/", status_code=303)
 
 # Add new item to the list
 @app.post("/add")
-async def add_todo(request:Request):
-    with open(root_database) as f:
-        data=json.load(f)
-    formdata=await request.form()
-    newdata={}
-    i=1
-    for id in data:
-        newdata[str(i)]=data[id]
-        i+=1
-    newdata[str(i)]=formdata["newtodo"]
-    print(newdata)
-    with open(root_database,'w') as f:
-        json.dump(newdata,f)
+async def add_todo(request:Request, text_todo: str = Form(...), db: Session = Depends(get_db)):
+    new_item = ToDoList(text_todo=text_todo)
+    db.add(new_item)
+    db.commit()
+    db.refresh(new_item)
     return RedirectResponse("/",303)
