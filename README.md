@@ -11,3 +11,8 @@ Installation Guide:
     fastapi run .\BSCToDoAPI\main.py
 
   Default port is 8000 but you can change it with --port [8000] at the end
+
+3.- Remember to check database.py, maybe you should change the url:
+<br></br>
+<img width="784" height="94" alt="image" src="https://github.com/user-attachments/assets/019abd0d-f174-4565-8849-39048481901d" />
+<br></br>
