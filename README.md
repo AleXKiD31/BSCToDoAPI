@@ -18,5 +18,5 @@ Installation Guide:
 <br></br>
 
 4.- Use at google chrome or any other website:
-    localhost:[8000]
+    localhost:8000
     The port is the same that you used at step 2.
