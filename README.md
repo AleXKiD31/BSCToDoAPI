@@ -16,3 +16,7 @@ Installation Guide:
 <br></br>
 <img width="784" height="94" alt="image" src="https://github.com/user-attachments/assets/019abd0d-f174-4565-8849-39048481901d" />
 <br></br>
+
+4.- Use at google chrome or any other website:
+    localhost:[8000]
+    The port is the same that you used at step 2.
